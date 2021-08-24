@@ -10,9 +10,6 @@
 #include <assert.h> 
 #include <stdlib.h> 
 
-/// For testing performance
-#include <time.h>
-
 /// Hides "str... function is unsafe" warning
 #pragma warning(disable:4996)
 
@@ -219,11 +216,7 @@ char *fgets_ (char *str, int num, FILE *source)
 
 int main (int argc, char *argv[])
 {
-    FILE *f = fopen ("source.txt", "r");
-    char b[40];
     
-    printf ("%s", fgets_ (b, 20, f));
-    
-    
+
     return 0;
 }
