@@ -74,8 +74,6 @@ char *strcpy_ (char *copy_to, const char *copy_from)
     assert (copy_from != NULL);
     assert (copy_to != NULL);
 
-    // Нужен ли assert (to != from) ?
-
     char *copied = copy_to;
     while (*copy_to++ = *copy_from++);
     return copied;
@@ -95,21 +93,18 @@ char *strncpy_ (char *copy_to, const char *copy_from, int n)
     assert (copy_to != NULL);
 
     // Determines if we're copying chars from beyond copy_from string;
-    char str_end = 0;
-    int i = 0;
+    int i = n;
+    char *result = copy_to;
 
-    while (i++ < n)
-        if (!str_end)
-        {
-            if ((*copy_to++ = *copy_from++) == '\0')
-                str_end = 1;
-        }
-        else
-        {
-            *copy_to++ = 0;   
-        }    
+    while (*copy_to++ = *copy_from++ && i) i--;   
+    
+    while (i) 
+    {
+        *copy_to++ = '\0';
+        i--;   
+    }
         
-    return copy_to - i + 1;
+    return result;
 }
 
 /**
@@ -153,7 +148,7 @@ int main (int argc, char *argv[])
     const char a[3] = "ab";
     char b[20] = "reqwe ";
 
-    printf ("%s", strncat_ (b, a, 1));
+    printf ("%s", strncpy (b, a, 1));
     
     return 0;
 
