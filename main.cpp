@@ -7,7 +7,8 @@
 
 #include <stdio.h>   
 #include <string.h>
-#include <assert.h>
+#include <assert.h> 
+#include <stdlib.h> 
 
 /// For testing performance
 #include <time.h>
@@ -107,6 +108,22 @@ char *strncpy_ (char *copy_to, const char *copy_from, int n)
 }
 
 /**
+ * Alternative version of strncpy
+ */
+char *strncpy_alt (char *copy_to, const char *copy_from, int n)
+{
+    assert (copy_from != NULL);
+    assert (copy_to != NULL);
+
+    memset (copy_to, '\0', n);
+    int size = strlen (copy_from);
+    size = size < n ? size : n;
+    memcpy (copy_to, copy_from, size);
+        
+    return copy_to;
+}
+
+/**
  * Concatenates destination and source strings
  * 
  * \param  char* dest
@@ -141,35 +158,72 @@ char *strncat_ (char *dest, const char *source, int n)
     return result;
 }
 
+/**
+ * Creates a duplicate of str, memory allocated with malloc
+ * 
+ * \param const char* str String to be duplicated
+ * \return Pointer to the duplicate or NULL
+ */
+char *strdup_ (const char *str)
+{
+    assert (str != NULL);
+    
+    char *str_ptr = (char *) malloc (sizeof (str));
+
+    if (str_ptr == NULL)
+        return NULL;
+
+    strcpy (str_ptr, str);
+
+    return str_ptr;
+}
+
+/**
+ * Reads first num chars from file. Stops if \\n or EOF found.
+ * 
+ * \param  str    String where chars would be put
+ * \param  num    Amount of symbols to read
+ * \param  source File to read symbols from
+ * \return Pointer to the string
+ */
+char *fgets_ (char *str, int num, FILE *source)
+{
+    assert (str != NULL);
+    assert (source != NULL);
+
+    char *result = str;
+    
+    if (num < 1)
+        return NULL;
+
+    int count = num;
+
+    while (--count)
+    {
+        char ch = fgetc (source);
+        if (ch && ch != EOF)
+        {    
+            *str++ = ch;        
+            if (ch == '\n') break;
+        }
+        else
+        {
+            if (count - num == 1) return NULL;
+            if (ch == NULL) return NULL;
+        }            
+    }
+    *str = '\0';
+    
+    return result;
+}
 
 int main (int argc, char *argv[])
 {
-    const char a[3] = "ab";
-    char b[20] = "reqwe ";
-
-    printf ("%s", strncpy (b, a, 1));
+    FILE *f = fopen ("source.txt", "r");
+    char b[40];
     
-    return 0;
-
-    // speed test
-    unsigned long long num = 1000000000;
-    double start = 0, end = 0;
-
-    start = clock();
-    for (int i = 0; i < num; i++)
-        strchr_ (a, 'v');
-    end = clock();
+    printf ("%s", fgets_ (b, 20, f));
     
-    printf ("%lf\n", end - start);
-   
-    start = 0, end = 0;
-
-    start = clock();
-    for (int i = 0; i < num; i++)
-        strchr (a, 'v');
-    end = clock();
-    
-    printf ("%lf\n", end - start);
     
     return 0;
 }
