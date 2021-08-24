@@ -92,7 +92,6 @@ char *strncpy_ (char *copy_to, const char *copy_from, int n)
     assert (copy_from != NULL);
     assert (copy_to != NULL);
 
-    // Determines if we're copying chars from beyond copy_from string;
     int i = n;
     char *result = copy_to;
 
